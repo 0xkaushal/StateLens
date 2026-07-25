@@ -1,0 +1,324 @@
+{
+  "conversations": [
+    {
+      "id": "conv-001",
+      "title": "Research Agent: Climate Change Report",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:02:34Z",
+      "status": "success",
+      "totalEvents": 6,
+      "totalLatencyMs": 4230
+    },
+    {
+      "id": "conv-002",
+      "title": "Code Review Agent: PR #142",
+      "createdAt": "2024-01-15T11:15:00Z",
+      "updatedAt": "2024-01-15T11:16:05Z",
+      "status": "failed",
+      "totalEvents": 4,
+      "totalLatencyMs": 2100
+    },
+    {
+      "id": "conv-003",
+      "title": "Customer Support: Billing Issue",
+      "createdAt": "2024-01-15T12:30:00Z",
+      "updatedAt": "2024-01-15T12:31:22Z",
+      "status": "success",
+      "totalEvents": 5,
+      "totalLatencyMs": 3100
+    }
+  ],
+  "events": {
+    "conv-001": [
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-planner-1",
+        "nodeName": "Planner",
+        "nodeType": "planner",
+        "startTime": "2024-01-15T10:00:00.000Z",
+        "endTime": "2024-01-15T10:00:00.820Z",
+        "latencyMs": 820,
+        "status": "success",
+        "input": {
+          "messages": [
+            { "role": "user", "content": "Write a detailed report on climate change impacts in 2024." }
+          ]
+        },
+        "output": {
+          "plan": ["search_web", "summarize_sources", "write_report"]
+        },
+        "stateBefore": { "messages": [], "plan": null },
+        "stateAfter": {
+          "messages": [{ "role": "user", "content": "Write a detailed report on climate change impacts in 2024." }],
+          "plan": ["search_web", "summarize_sources", "write_report"]
+        }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-tool-1",
+        "nodeName": "WebSearch",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T10:00:00.820Z",
+        "endTime": "2024-01-15T10:00:01.620Z",
+        "latencyMs": 800,
+        "status": "success",
+        "input": { "query": "climate change impacts 2024" },
+        "output": {
+          "results": [
+            { "title": "IPCC Report 2024", "url": "https://ipcc.ch/report2024", "snippet": "Global temperatures rise 1.5°C..." },
+            { "title": "Nature: Sea Level Rise", "url": "https://nature.com/sea-level", "snippet": "Sea levels rising faster than expected..." }
+          ]
+        },
+        "stateBefore": { "search_results": null },
+        "stateAfter": {
+          "search_results": [
+            { "title": "IPCC Report 2024", "url": "https://ipcc.ch/report2024" },
+            { "title": "Nature: Sea Level Rise", "url": "https://nature.com/sea-level" }
+          ]
+        }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-memory-1",
+        "nodeName": "Memory",
+        "nodeType": "memory",
+        "startTime": "2024-01-15T10:00:01.620Z",
+        "endTime": "2024-01-15T10:00:01.920Z",
+        "latencyMs": 300,
+        "status": "success",
+        "input": { "query": "previous climate reports", "top_k": 3 },
+        "output": {
+          "memories": [
+            { "content": "User prefers concise, bullet-pointed reports", "relevance": 0.92 }
+          ]
+        },
+        "stateBefore": { "memories": [] },
+        "stateAfter": {
+          "memories": [{ "content": "User prefers concise, bullet-pointed reports", "relevance": 0.92 }]
+        }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-llm-1",
+        "nodeName": "Summarizer",
+        "nodeType": "llm",
+        "startTime": "2024-01-15T10:00:01.920Z",
+        "endTime": "2024-01-15T10:00:03.320Z",
+        "latencyMs": 1400,
+        "status": "success",
+        "input": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a research assistant. Summarize the provided search results into key points. User prefers concise, bullet-pointed reports."
+            },
+            {
+              "role": "user",
+              "content": "Summarize these climate change findings: [IPCC Report 2024, Nature: Sea Level Rise]"
+            }
+          ],
+          "model": "gpt-4o",
+          "temperature": 0.3
+        },
+        "output": {
+          "content": "Key Climate Change Impacts in 2024:\n• Global temperatures have risen 1.5°C above pre-industrial levels\n• Sea levels rising 3.7mm/year, faster than IPCC projections\n• Arctic ice sheet loss accelerating\n• Extreme weather events 40% more frequent",
+          "usage": { "prompt_tokens": 412, "completion_tokens": 89, "total_tokens": 501 }
+        },
+        "stateBefore": { "summary": null },
+        "stateAfter": {
+          "summary": "Key Climate Change Impacts in 2024:\n• Global temperatures have risen 1.5°C..."
+        }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-router-1",
+        "nodeName": "Router",
+        "nodeType": "router",
+        "startTime": "2024-01-15T10:00:03.320Z",
+        "endTime": "2024-01-15T10:00:03.530Z",
+        "latencyMs": 210,
+        "status": "success",
+        "input": { "summary": "Key Climate Change Impacts...", "plan": ["search_web", "summarize_sources", "write_report"] },
+        "output": { "next_node": "write_report", "reason": "summarize_sources completed" },
+        "stateBefore": { "current_step": "summarize_sources" },
+        "stateAfter": { "current_step": "write_report" }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-llm-2",
+        "nodeName": "ReportWriter",
+        "nodeType": "llm",
+        "startTime": "2024-01-15T10:00:03.530Z",
+        "endTime": "2024-01-15T10:00:04.230Z",
+        "latencyMs": 700,
+        "status": "success",
+        "input": {
+          "messages": [
+            { "role": "system", "content": "You are a professional report writer. Create a well-structured report." },
+            { "role": "user", "content": "Write a report based on: Key Climate Change Impacts in 2024..." }
+          ],
+          "model": "gpt-4o",
+          "temperature": 0.5
+        },
+        "output": {
+          "content": "# Climate Change Impacts Report 2024\n\n## Executive Summary\nThe year 2024 marks a critical threshold...",
+          "usage": { "prompt_tokens": 310, "completion_tokens": 245, "total_tokens": 555 }
+        },
+        "stateBefore": { "report": null },
+        "stateAfter": { "report": "# Climate Change Impacts Report 2024..." }
+      }
+    ],
+    "conv-002": [
+      {
+        "conversationId": "conv-002",
+        "nodeId": "node-planner-1",
+        "nodeName": "Planner",
+        "nodeType": "planner",
+        "startTime": "2024-01-15T11:15:00.000Z",
+        "endTime": "2024-01-15T11:15:00.650Z",
+        "latencyMs": 650,
+        "status": "success",
+        "input": { "messages": [{ "role": "user", "content": "Review PR #142 for security vulnerabilities." }] },
+        "output": { "plan": ["fetch_pr", "analyze_code", "generate_review"] },
+        "stateBefore": { "messages": [], "plan": null },
+        "stateAfter": { "messages": [{}], "plan": ["fetch_pr", "analyze_code", "generate_review"] }
+      },
+      {
+        "conversationId": "conv-002",
+        "nodeId": "node-tool-1",
+        "nodeName": "GitHubFetch",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T11:15:00.650Z",
+        "endTime": "2024-01-15T11:15:01.250Z",
+        "latencyMs": 600,
+        "status": "success",
+        "input": { "repo": "org/repo", "pr": 142 },
+        "output": { "diff": "--- a/auth.py\n+++ b/auth.py\n@@ -12,6 +12,8 @@\n+  password = request.get('password')\n+  query = f\"SELECT * FROM users WHERE password='{password}'\"" },
+        "stateBefore": { "pr_diff": null },
+        "stateAfter": { "pr_diff": "--- a/auth.py..." }
+      },
+      {
+        "conversationId": "conv-002",
+        "nodeId": "node-llm-1",
+        "nodeName": "CodeAnalyzer",
+        "nodeType": "llm",
+        "startTime": "2024-01-15T11:15:01.250Z",
+        "endTime": "2024-01-15T11:15:01.950Z",
+        "latencyMs": 700,
+        "status": "failed",
+        "input": {
+          "messages": [
+            { "role": "system", "content": "Analyze code for security vulnerabilities." },
+            { "role": "user", "content": "Review this diff: --- a/auth.py..." }
+          ],
+          "model": "gpt-4o"
+        },
+        "output": {},
+        "stateBefore": { "analysis": null },
+        "stateAfter": { "analysis": null },
+        "error": "RateLimitError: OpenAI API rate limit exceeded. Please retry after 60 seconds."
+      },
+      {
+        "conversationId": "conv-002",
+        "nodeId": "node-router-1",
+        "nodeName": "ErrorHandler",
+        "nodeType": "router",
+        "startTime": "2024-01-15T11:15:01.950Z",
+        "endTime": "2024-01-15T11:15:02.100Z",
+        "latencyMs": 150,
+        "status": "failed",
+        "input": { "error": "RateLimitError", "retry_count": 0 },
+        "output": { "next_node": "END", "reason": "max retries exceeded" },
+        "stateBefore": { "retry_count": 0 },
+        "stateAfter": { "retry_count": 1, "terminal": true },
+        "error": "Max retries exceeded for rate limit error."
+      }
+    ],
+    "conv-003": [
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-planner-1",
+        "nodeName": "Planner",
+        "nodeType": "planner",
+        "startTime": "2024-01-15T12:30:00.000Z",
+        "endTime": "2024-01-15T12:30:00.500Z",
+        "latencyMs": 500,
+        "status": "success",
+        "input": { "messages": [{ "role": "user", "content": "I was charged twice for my subscription." }] },
+        "output": { "intent": "billing_issue", "plan": ["lookup_account", "check_charges", "resolve"] },
+        "stateBefore": {},
+        "stateAfter": { "intent": "billing_issue" }
+      },
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-tool-1",
+        "nodeName": "AccountLookup",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T12:30:00.500Z",
+        "endTime": "2024-01-15T12:30:01.000Z",
+        "latencyMs": 500,
+        "status": "success",
+        "input": { "user_id": "usr_8823" },
+        "output": { "account": { "id": "usr_8823", "plan": "Pro", "billing_cycle": "monthly" } },
+        "stateBefore": { "account": null },
+        "stateAfter": { "account": { "id": "usr_8823", "plan": "Pro" } }
+      },
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-tool-2",
+        "nodeName": "BillingCheck",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T12:30:01.000Z",
+        "endTime": "2024-01-15T12:30:01.700Z",
+        "latencyMs": 700,
+        "status": "success",
+        "input": { "account_id": "usr_8823", "days": 30 },
+        "output": {
+          "charges": [
+            { "date": "2024-01-14", "amount": 49.00, "description": "Pro Monthly" },
+            { "date": "2024-01-14", "amount": 49.00, "description": "Pro Monthly - Duplicate" }
+          ]
+        },
+        "stateBefore": { "charges": null },
+        "stateAfter": { "charges": [{}], "duplicate_detected": true }
+      },
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-llm-1",
+        "nodeName": "SupportAgent",
+        "nodeType": "llm",
+        "startTime": "2024-01-15T12:30:01.700Z",
+        "endTime": "2024-01-15T12:30:02.800Z",
+        "latencyMs": 1100,
+        "status": "success",
+        "input": {
+          "messages": [
+            { "role": "system", "content": "You are a helpful customer support agent. A duplicate charge was detected." },
+            { "role": "user", "content": "I was charged twice for my subscription." }
+          ],
+          "model": "gpt-4o"
+        },
+        "output": {
+          "content": "I can see that you were indeed charged twice on January 14th. I've initiated a refund of $49.00 which will appear in 3-5 business days. I apologize for the inconvenience.",
+          "actions": [{ "type": "refund", "amount": 49.00, "charge_id": "ch_duplicate" }]
+        },
+        "stateBefore": { "response": null },
+        "stateAfter": { "response": "I can see that you were indeed charged twice...", "refund_initiated": true }
+      },
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-tool-3",
+        "nodeName": "RefundProcessor",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T12:30:02.800Z",
+        "endTime": "2024-01-15T12:30:03.100Z",
+        "latencyMs": 300,
+        "status": "success",
+        "input": { "charge_id": "ch_duplicate", "amount": 49.00 },
+        "output": { "refund_id": "re_abc123", "status": "pending", "estimated_days": 5 },
+        "stateBefore": { "refund": null },
+        "stateAfter": { "refund": { "id": "re_abc123", "status": "pending" } }
+      }
+    ]
+  }
+}
