@@ -1,0 +1,174 @@
+{
+  "conversations": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "startTime": "2025-07-25T10:00:00Z",
+      "endTime": "2025-07-25T10:00:08Z",
+      "nodeCount": 4,
+      "status": "success"
+    },
+    {
+      "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+      "startTime": "2025-07-25T09:55:00Z",
+      "endTime": "2025-07-25T09:55:12Z",
+      "nodeCount": 6,
+      "status": "failed"
+    }
+  ],
+  "events": {
+    "550e8400-e29b-41d4-a716-446655440000": [
+      {
+        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
+        "nodeId": "aaa-001",
+        "nodeName": "planner",
+        "nodeType": "planner",
+        "startTime": "2025-07-25T10:00:00Z",
+        "endTime": "2025-07-25T10:00:01Z",
+        "latencyMs": 1000,
+        "status": "success",
+        "input": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}]},
+        "output": {"messages": [{"role": "assistant", "content": "I'll search for weather info."}]},
+        "stateBefore": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}], "step_count": 0},
+        "stateAfter": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}], "step_count": 1},
+        "error": null
+      },
+      {
+        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
+        "nodeId": "aaa-002",
+        "nodeName": "search_tool",
+        "nodeType": "tool",
+        "startTime": "2025-07-25T10:00:01Z",
+        "endTime": "2025-07-25T10:00:04Z",
+        "latencyMs": 3000,
+        "status": "success",
+        "input": {"query": "weather NYC today"},
+        "output": {"result": "Sunny, 78°F, humidity 45%"},
+        "stateBefore": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}], "step_count": 1},
+        "stateAfter": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}], "step_count": 2},
+        "error": null
+      },
+      {
+        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
+        "nodeId": "aaa-003",
+        "nodeName": "agent",
+        "nodeType": "llm",
+        "startTime": "2025-07-25T10:00:04Z",
+        "endTime": "2025-07-25T10:00:07Z",
+        "latencyMs": 3000,
+        "status": "success",
+        "input": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}]},
+        "output": {"messages": [{"role": "assistant", "content": "The weather in NYC today is sunny with a temperature of 78°F and 45% humidity."}]},
+        "stateBefore": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}], "step_count": 2},
+        "stateAfter": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}, {"role": "assistant", "content": "The weather in NYC today is sunny with a temperature of 78°F and 45% humidity."}], "step_count": 3},
+        "error": null
+      },
+      {
+        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
+        "nodeId": "aaa-004",
+        "nodeName": "router",
+        "nodeType": "router",
+        "startTime": "2025-07-25T10:00:07Z",
+        "endTime": "2025-07-25T10:00:08Z",
+        "latencyMs": 1000,
+        "status": "success",
+        "input": {"decision": "end"},
+        "output": {"next": "__end__"},
+        "stateBefore": {"step_count": 3},
+        "stateAfter": {"step_count": 4},
+        "error": null
+      }
+    ],
+    "6ba7b810-9dad-11d1-80b4-00c04fd430c8": [
+      {
+        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nodeId": "bbb-001",
+        "nodeName": "planner",
+        "nodeType": "planner",
+        "startTime": "2025-07-25T09:55:00Z",
+        "endTime": "2025-07-25T09:55:02Z",
+        "latencyMs": 2000,
+        "status": "success",
+        "input": {"messages": [{"role": "user", "content": "Book a flight to Mars"}]},
+        "output": {"messages": [{"role": "assistant", "content": "Let me check available flights."}]},
+        "stateBefore": {"messages": [{"role": "user", "content": "Book a flight to Mars"}], "step_count": 0},
+        "stateAfter": {"messages": [{"role": "user", "content": "Book a flight to Mars"}, {"role": "assistant", "content": "Let me check available flights."}], "step_count": 1},
+        "error": null
+      },
+      {
+        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nodeId": "bbb-002",
+        "nodeName": "booking_tool",
+        "nodeType": "tool",
+        "startTime": "2025-07-25T09:55:02Z",
+        "endTime": "2025-07-25T09:55:05Z",
+        "latencyMs": 3000,
+        "status": "failed",
+        "input": {"destination": "Mars", "date": "2025-08-01"},
+        "output": {},
+        "stateBefore": {"step_count": 1},
+        "stateAfter": {"step_count": 2},
+        "error": "ToolError: No flights available to destination 'Mars'. Service returned 404."
+      },
+      {
+        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nodeId": "bbb-003",
+        "nodeName": "agent",
+        "nodeType": "llm",
+        "startTime": "2025-07-25T09:55:05Z",
+        "endTime": "2025-07-25T09:55:08Z",
+        "latencyMs": 3000,
+        "status": "success",
+        "input": {"messages": [{"role": "tool", "content": "Error: No flights to Mars"}]},
+        "output": {"messages": [{"role": "assistant", "content": "I'll try an alternative approach."}]},
+        "stateBefore": {"step_count": 2},
+        "stateAfter": {"step_count": 3},
+        "error": null
+      },
+      {
+        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nodeId": "bbb-004",
+        "nodeName": "memory",
+        "nodeType": "memory",
+        "startTime": "2025-07-25T09:55:08Z",
+        "endTime": "2025-07-25T09:55:09Z",
+        "latencyMs": 1000,
+        "status": "success",
+        "input": {"action": "recall", "query": "space travel providers"},
+        "output": {"memories": ["SpaceX", "Blue Origin"]},
+        "stateBefore": {"step_count": 3},
+        "stateAfter": {"step_count": 4},
+        "error": null
+      },
+      {
+        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nodeId": "bbb-005",
+        "nodeName": "booking_tool",
+        "nodeType": "tool",
+        "startTime": "2025-07-25T09:55:09Z",
+        "endTime": "2025-07-25T09:55:11Z",
+        "latencyMs": 2000,
+        "status": "failed",
+        "input": {"provider": "SpaceX", "destination": "Mars"},
+        "output": {},
+        "stateBefore": {"step_count": 4},
+        "stateAfter": {"step_count": 5},
+        "error": "TimeoutError: Provider API did not respond within 2000ms."
+      },
+      {
+        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nodeId": "bbb-006",
+        "nodeName": "agent",
+        "nodeType": "llm",
+        "startTime": "2025-07-25T09:55:11Z",
+        "endTime": "2025-07-25T09:55:12Z",
+        "latencyMs": 1000,
+        "status": "success",
+        "input": {"messages": [{"role": "tool", "content": "Timeout error"}]},
+        "output": {"messages": [{"role": "assistant", "content": "I'm sorry, I was unable to book a flight to Mars. All providers timed out or returned errors."}]},
+        "stateBefore": {"step_count": 5},
+        "stateAfter": {"step_count": 6},
+        "error": null
+      }
+    ]
+  }
+}
