@@ -27,10 +27,22 @@ _write_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="statelen
 
 
 def get_db_path() -> Path:
-    """Resolve database path from env or use default."""
+    """Resolve database path: env var > project-local > home directory.
+
+    Priority:
+        1. STATELENS_DB_PATH environment variable (explicit override)
+        2. .statelens/statelens.db in CWD (project-local, created by `statelens init`)
+        3. ~/.statelens/statelens.db (home directory fallback)
+    """
     env_path = os.environ.get("STATELENS_DB_PATH")
     if env_path:
         return Path(env_path)
+
+    # Project-local: created by `statelens init`
+    local_db = Path.cwd() / ".statelens" / "statelens.db"
+    if local_db.parent.exists():
+        return local_db
+
     return DEFAULT_DB_PATH
 
 
