@@ -1,21 +1,29 @@
 """StateLens SDK — Storage Layer.
 
-Provides a Storage protocol (ABC) and a SQLiteStorage implementation.
+Provides a Storage protocol (ABC) and implementations:
+- SQLiteStorage: synchronous, for use with graph.invoke()
+- AsyncSQLiteStorage: non-blocking, for use with graph.ainvoke() / astream()
+
 Never depend on SQLite directly outside this module.
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import sqlite3
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from statelens.events import Event
 
 # Default database path — shared between SDK and backend server.
 DEFAULT_DB_PATH = Path.home() / ".statelens" / "statelens.db"
+
+# Shared thread pool for async writes — single thread ensures SQLite ordering.
+_write_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="statelens-db")
 
 
 def get_db_path() -> Path:
@@ -34,10 +42,26 @@ class Storage(ABC):
 
     @abstractmethod
     def save_event(self, event: Event) -> None:
-        """Persist a single event."""
+        """Persist a single event (synchronous)."""
 
     @abstractmethod
     def close(self) -> None:
+        """Release resources."""
+
+
+class AsyncStorage(ABC):
+    """Abstract async storage interface.
+
+    For use in async contexts (ainvoke, astream) where blocking the
+    event loop is unacceptable.
+    """
+
+    @abstractmethod
+    async def save_event(self, event: Event) -> None:
+        """Persist a single event (non-blocking)."""
+
+    @abstractmethod
+    async def close(self) -> None:
         """Release resources."""
 
 
@@ -116,3 +140,26 @@ class SQLiteStorage(Storage):
     def close(self) -> None:
         """Close the database connection."""
         self._conn.close()
+
+
+class AsyncSQLiteStorage(AsyncStorage):
+    """Non-blocking SQLite storage for async contexts.
+
+    Offloads SQLite writes to a dedicated background thread so
+    ainvoke() and astream() are never blocked by disk I/O.
+
+    Uses a single-thread executor to preserve write ordering.
+    """
+
+    def __init__(self, db_path: Path | None = None) -> None:
+        self._sync_storage = SQLiteStorage(db_path=db_path)
+
+    async def save_event(self, event: Event) -> None:
+        """Persist an event without blocking the event loop."""
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(_write_executor, self._sync_storage.save_event, event)
+
+    async def close(self) -> None:
+        """Close the underlying sync storage."""
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(_write_executor, self._sync_storage.close)

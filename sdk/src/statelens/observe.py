@@ -15,10 +15,10 @@ from typing import Any
 from statelens.collector import Collector
 from statelens.config import FEATURES
 from statelens.langgraph import StateLensCallbackHandler
-from statelens.storage import SQLiteStorage
+from statelens.storage import AsyncSQLiteStorage, SQLiteStorage
 
 
-def observe(graph: Any, *, conversation_id: str | None = None) -> Any:
+def observe(graph: Any, *, conversation_id: str | None = None, async_storage: bool = True) -> Any:
     """Instrument a LangGraph compiled graph for debugging.
 
     Attaches a StateLens callback handler to the graph so every node
@@ -28,6 +28,11 @@ def observe(graph: Any, *, conversation_id: str | None = None) -> Any:
         graph: A compiled LangGraph graph (CompiledGraph).
         conversation_id: Optional fixed conversation ID. If not provided,
             a new UUID is generated for each invocation.
+        async_storage: If True (default), uses a non-blocking storage backend
+            that offloads SQLite writes to a background thread. This prevents
+            ainvoke()/astream() from being blocked by disk I/O. Set to False
+            to use synchronous storage (simpler, slightly lower latency for
+            sync invoke() usage).
 
     Returns:
         A wrapped graph that behaves identically but records events.
@@ -38,12 +43,21 @@ def observe(graph: Any, *, conversation_id: str | None = None) -> Any:
         app = graph.compile()
         app = observe(app)
         result = app.invoke({"messages": [...]})
+
+        # Also works with async:
+        result = await app.ainvoke({"messages": [...]})
     """
     if not FEATURES["langgraph"]:
         # Feature disabled — return graph unmodified
         return graph
 
-    storage = SQLiteStorage()
+    # Use async storage by default so ainvoke/astream don't block.
+    # The async storage wraps sync SQLite in a thread pool.
+    if async_storage:
+        storage = AsyncSQLiteStorage()
+    else:
+        storage = SQLiteStorage()
+
     collector = Collector(conversation_id=conversation_id, storage=storage)
     handler = StateLensCallbackHandler(collector)
 
@@ -60,6 +74,7 @@ def _wrap_graph(graph: Any, handler: StateLensCallbackHandler) -> Any:
     original_invoke = graph.invoke
     original_ainvoke = getattr(graph, "ainvoke", None)
     original_stream = getattr(graph, "stream", None)
+    original_astream = getattr(graph, "astream", None)
 
     def wrapped_invoke(input: Any, config: dict | None = None, **kwargs: Any) -> Any:
         config = _inject_handler(config, handler)
@@ -73,6 +88,11 @@ def _wrap_graph(graph: Any, handler: StateLensCallbackHandler) -> Any:
         config = _inject_handler(config, handler)
         return original_stream(input, config=config, **kwargs)
 
+    async def wrapped_astream(input: Any, config: dict | None = None, **kwargs: Any) -> Any:
+        config = _inject_handler(config, handler)
+        async for chunk in original_astream(input, config=config, **kwargs):
+            yield chunk
+
     graph.invoke = wrapped_invoke
 
     if original_ainvoke is not None:
@@ -80,6 +100,9 @@ def _wrap_graph(graph: Any, handler: StateLensCallbackHandler) -> Any:
 
     if original_stream is not None:
         graph.stream = wrapped_stream
+
+    if original_astream is not None:
+        graph.astream = wrapped_astream
 
     # Attach collector for advanced usage (e.g. accessing conversation_id)
     graph._statelens_collector = handler.collector
