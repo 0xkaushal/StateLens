@@ -5,12 +5,28 @@ description = "Chrome DevTools for AI Agents — one install, full debugging exp
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-
+authors = [{name = "Satvik Kaushal"}]
+keywords = ["ai", "agents", "debugging", "langgraph", "devtools"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Debuggers",
+]
 dependencies = [
     "pydantic>=2.0",
     "fastapi>=0.111.0",
     "uvicorn[standard]>=0.30.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/0xkaushal/StateLens"
+Repository = "https://github.com/0xkaushal/StateLens"
+Issues = "https://github.com/0xkaushal/StateLens/issues"
 
 [project.optional-dependencies]
 langgraph = [
@@ -32,9 +48,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sdk/src/statelens", "backend/src/statelens_server"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"backend/src/statelens_server/static" = "statelens_server/static"
 
 [tool.pytest.ini_options]
 testpaths = ["sdk/tests", "backend/tests"]

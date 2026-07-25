@@ -33,9 +33,6 @@ env/
 # StateLens local data
 .statelens/
 
-# Frontend build output served by backend
-backend/src/statelens_server/static/
-
 # Auth / credentials
 .npmrc
 
