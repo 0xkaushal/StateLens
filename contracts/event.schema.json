@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://statelens.dev/schemas/event.json",
+  "title": "StateLens Event",
+  "description": "Canonical event model. Every execution step creates exactly one Event.",
+  "type": "object",
+  "required": [
+    "conversationId",
+    "nodeId",
+    "nodeName",
+    "nodeType",
+    "startTime",
+    "endTime",
+    "latencyMs",
+    "status",
+    "input",
+    "output",
+    "stateBefore",
+    "stateAfter"
+  ],
+  "properties": {
+    "conversationId": {
+      "type": "string",
+      "description": "Unique identifier for the conversation/execution run."
+    },
+    "nodeId": {
+      "type": "string",
+      "description": "Unique identifier for this specific node execution instance."
+    },
+    "nodeName": {
+      "type": "string",
+      "description": "Human-readable name of the node (e.g. 'agent', 'search_tool')."
+    },
+    "nodeType": {
+      "type": "string",
+      "enum": ["llm", "tool", "memory", "planner", "router"],
+      "description": "Category of the node."
+    },
+    "startTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when node execution started."
+    },
+    "endTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when node execution ended."
+    },
+    "latencyMs": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Execution duration in milliseconds."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "failed"],
+      "description": "Whether the node execution succeeded or failed."
+    },
+    "input": {
+      "type": "object",
+      "description": "Input passed to the node."
+    },
+    "output": {
+      "type": "object",
+      "description": "Output produced by the node."
+    },
+    "stateBefore": {
+      "type": "object",
+      "description": "Graph state before this node executed."
+    },
+    "stateAfter": {
+      "type": "object",
+      "description": "Graph state after this node executed."
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if status is 'failed'."
+    }
+  },
+  "additionalProperties": false
+}
