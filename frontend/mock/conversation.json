@@ -1,173 +1,323 @@
 {
   "conversations": [
     {
-      "id": "550e8400-e29b-41d4-a716-446655440000",
-      "startTime": "2025-07-25T10:00:00Z",
-      "endTime": "2025-07-25T10:00:08Z",
-      "nodeCount": 4,
-      "status": "success"
+      "id": "conv-001",
+      "title": "Research Agent: Climate Change Report",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:02:34Z",
+      "status": "success",
+      "totalEvents": 6,
+      "totalLatencyMs": 4230
     },
     {
-      "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-      "startTime": "2025-07-25T09:55:00Z",
-      "endTime": "2025-07-25T09:55:12Z",
-      "nodeCount": 6,
-      "status": "failed"
+      "id": "conv-002",
+      "title": "Code Review Agent: PR #142",
+      "createdAt": "2024-01-15T11:15:00Z",
+      "updatedAt": "2024-01-15T11:16:05Z",
+      "status": "failed",
+      "totalEvents": 4,
+      "totalLatencyMs": 2100
+    },
+    {
+      "id": "conv-003",
+      "title": "Customer Support: Billing Issue",
+      "createdAt": "2024-01-15T12:30:00Z",
+      "updatedAt": "2024-01-15T12:31:22Z",
+      "status": "success",
+      "totalEvents": 5,
+      "totalLatencyMs": 3100
     }
   ],
   "events": {
-    "550e8400-e29b-41d4-a716-446655440000": [
+    "conv-001": [
       {
-        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
-        "nodeId": "aaa-001",
-        "nodeName": "planner",
+        "conversationId": "conv-001",
+        "nodeId": "node-planner-1",
+        "nodeName": "Planner",
         "nodeType": "planner",
-        "startTime": "2025-07-25T10:00:00Z",
-        "endTime": "2025-07-25T10:00:01Z",
-        "latencyMs": 1000,
+        "startTime": "2024-01-15T10:00:00.000Z",
+        "endTime": "2024-01-15T10:00:00.820Z",
+        "latencyMs": 820,
         "status": "success",
-        "input": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}]},
-        "output": {"messages": [{"role": "assistant", "content": "I'll search for weather info."}]},
-        "stateBefore": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}], "step_count": 0},
-        "stateAfter": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}], "step_count": 1},
-        "error": null
+        "input": {
+          "messages": [
+            { "role": "user", "content": "Write a detailed report on climate change impacts in 2024." }
+          ]
+        },
+        "output": {
+          "plan": ["search_web", "summarize_sources", "write_report"]
+        },
+        "stateBefore": { "messages": [], "plan": null },
+        "stateAfter": {
+          "messages": [{ "role": "user", "content": "Write a detailed report on climate change impacts in 2024." }],
+          "plan": ["search_web", "summarize_sources", "write_report"]
+        }
       },
       {
-        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
-        "nodeId": "aaa-002",
-        "nodeName": "search_tool",
+        "conversationId": "conv-001",
+        "nodeId": "node-tool-1",
+        "nodeName": "WebSearch",
         "nodeType": "tool",
-        "startTime": "2025-07-25T10:00:01Z",
-        "endTime": "2025-07-25T10:00:04Z",
-        "latencyMs": 3000,
+        "startTime": "2024-01-15T10:00:00.820Z",
+        "endTime": "2024-01-15T10:00:01.620Z",
+        "latencyMs": 800,
         "status": "success",
-        "input": {"query": "weather NYC today"},
-        "output": {"result": "Sunny, 78°F, humidity 45%"},
-        "stateBefore": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}], "step_count": 1},
-        "stateAfter": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}], "step_count": 2},
-        "error": null
+        "input": { "query": "climate change impacts 2024" },
+        "output": {
+          "results": [
+            { "title": "IPCC Report 2024", "url": "https://ipcc.ch/report2024", "snippet": "Global temperatures rise 1.5°C..." },
+            { "title": "Nature: Sea Level Rise", "url": "https://nature.com/sea-level", "snippet": "Sea levels rising faster than expected..." }
+          ]
+        },
+        "stateBefore": { "search_results": null },
+        "stateAfter": {
+          "search_results": [
+            { "title": "IPCC Report 2024", "url": "https://ipcc.ch/report2024" },
+            { "title": "Nature: Sea Level Rise", "url": "https://nature.com/sea-level" }
+          ]
+        }
       },
       {
-        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
-        "nodeId": "aaa-003",
-        "nodeName": "agent",
+        "conversationId": "conv-001",
+        "nodeId": "node-memory-1",
+        "nodeName": "Memory",
+        "nodeType": "memory",
+        "startTime": "2024-01-15T10:00:01.620Z",
+        "endTime": "2024-01-15T10:00:01.920Z",
+        "latencyMs": 300,
+        "status": "success",
+        "input": { "query": "previous climate reports", "top_k": 3 },
+        "output": {
+          "memories": [
+            { "content": "User prefers concise, bullet-pointed reports", "relevance": 0.92 }
+          ]
+        },
+        "stateBefore": { "memories": [] },
+        "stateAfter": {
+          "memories": [{ "content": "User prefers concise, bullet-pointed reports", "relevance": 0.92 }]
+        }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-llm-1",
+        "nodeName": "Summarizer",
         "nodeType": "llm",
-        "startTime": "2025-07-25T10:00:04Z",
-        "endTime": "2025-07-25T10:00:07Z",
-        "latencyMs": 3000,
+        "startTime": "2024-01-15T10:00:01.920Z",
+        "endTime": "2024-01-15T10:00:03.320Z",
+        "latencyMs": 1400,
         "status": "success",
-        "input": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}]},
-        "output": {"messages": [{"role": "assistant", "content": "The weather in NYC today is sunny with a temperature of 78°F and 45% humidity."}]},
-        "stateBefore": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}], "step_count": 2},
-        "stateAfter": {"messages": [{"role": "user", "content": "What is the weather in NYC?"}, {"role": "assistant", "content": "I'll search for weather info."}, {"role": "tool", "content": "Sunny, 78°F, humidity 45%"}, {"role": "assistant", "content": "The weather in NYC today is sunny with a temperature of 78°F and 45% humidity."}], "step_count": 3},
-        "error": null
+        "input": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a research assistant. Summarize the provided search results into key points. User prefers concise, bullet-pointed reports."
+            },
+            {
+              "role": "user",
+              "content": "Summarize these climate change findings: [IPCC Report 2024, Nature: Sea Level Rise]"
+            }
+          ],
+          "model": "gpt-4o",
+          "temperature": 0.3
+        },
+        "output": {
+          "content": "Key Climate Change Impacts in 2024:\n• Global temperatures have risen 1.5°C above pre-industrial levels\n• Sea levels rising 3.7mm/year, faster than IPCC projections\n• Arctic ice sheet loss accelerating\n• Extreme weather events 40% more frequent",
+          "usage": { "prompt_tokens": 412, "completion_tokens": 89, "total_tokens": 501 }
+        },
+        "stateBefore": { "summary": null },
+        "stateAfter": {
+          "summary": "Key Climate Change Impacts in 2024:\n• Global temperatures have risen 1.5°C..."
+        }
       },
       {
-        "conversationId": "550e8400-e29b-41d4-a716-446655440000",
-        "nodeId": "aaa-004",
-        "nodeName": "router",
+        "conversationId": "conv-001",
+        "nodeId": "node-router-1",
+        "nodeName": "Router",
         "nodeType": "router",
-        "startTime": "2025-07-25T10:00:07Z",
-        "endTime": "2025-07-25T10:00:08Z",
-        "latencyMs": 1000,
+        "startTime": "2024-01-15T10:00:03.320Z",
+        "endTime": "2024-01-15T10:00:03.530Z",
+        "latencyMs": 210,
         "status": "success",
-        "input": {"decision": "end"},
-        "output": {"next": "__end__"},
-        "stateBefore": {"step_count": 3},
-        "stateAfter": {"step_count": 4},
-        "error": null
+        "input": { "summary": "Key Climate Change Impacts...", "plan": ["search_web", "summarize_sources", "write_report"] },
+        "output": { "next_node": "write_report", "reason": "summarize_sources completed" },
+        "stateBefore": { "current_step": "summarize_sources" },
+        "stateAfter": { "current_step": "write_report" }
+      },
+      {
+        "conversationId": "conv-001",
+        "nodeId": "node-llm-2",
+        "nodeName": "ReportWriter",
+        "nodeType": "llm",
+        "startTime": "2024-01-15T10:00:03.530Z",
+        "endTime": "2024-01-15T10:00:04.230Z",
+        "latencyMs": 700,
+        "status": "success",
+        "input": {
+          "messages": [
+            { "role": "system", "content": "You are a professional report writer. Create a well-structured report." },
+            { "role": "user", "content": "Write a report based on: Key Climate Change Impacts in 2024..." }
+          ],
+          "model": "gpt-4o",
+          "temperature": 0.5
+        },
+        "output": {
+          "content": "# Climate Change Impacts Report 2024\n\n## Executive Summary\nThe year 2024 marks a critical threshold...",
+          "usage": { "prompt_tokens": 310, "completion_tokens": 245, "total_tokens": 555 }
+        },
+        "stateBefore": { "report": null },
+        "stateAfter": { "report": "# Climate Change Impacts Report 2024..." }
       }
     ],
-    "6ba7b810-9dad-11d1-80b4-00c04fd430c8": [
+    "conv-002": [
       {
-        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        "nodeId": "bbb-001",
-        "nodeName": "planner",
+        "conversationId": "conv-002",
+        "nodeId": "node-planner-1",
+        "nodeName": "Planner",
         "nodeType": "planner",
-        "startTime": "2025-07-25T09:55:00Z",
-        "endTime": "2025-07-25T09:55:02Z",
-        "latencyMs": 2000,
+        "startTime": "2024-01-15T11:15:00.000Z",
+        "endTime": "2024-01-15T11:15:00.650Z",
+        "latencyMs": 650,
         "status": "success",
-        "input": {"messages": [{"role": "user", "content": "Book a flight to Mars"}]},
-        "output": {"messages": [{"role": "assistant", "content": "Let me check available flights."}]},
-        "stateBefore": {"messages": [{"role": "user", "content": "Book a flight to Mars"}], "step_count": 0},
-        "stateAfter": {"messages": [{"role": "user", "content": "Book a flight to Mars"}, {"role": "assistant", "content": "Let me check available flights."}], "step_count": 1},
-        "error": null
+        "input": { "messages": [{ "role": "user", "content": "Review PR #142 for security vulnerabilities." }] },
+        "output": { "plan": ["fetch_pr", "analyze_code", "generate_review"] },
+        "stateBefore": { "messages": [], "plan": null },
+        "stateAfter": { "messages": [{}], "plan": ["fetch_pr", "analyze_code", "generate_review"] }
       },
       {
-        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        "nodeId": "bbb-002",
-        "nodeName": "booking_tool",
+        "conversationId": "conv-002",
+        "nodeId": "node-tool-1",
+        "nodeName": "GitHubFetch",
         "nodeType": "tool",
-        "startTime": "2025-07-25T09:55:02Z",
-        "endTime": "2025-07-25T09:55:05Z",
-        "latencyMs": 3000,
-        "status": "failed",
-        "input": {"destination": "Mars", "date": "2025-08-01"},
-        "output": {},
-        "stateBefore": {"step_count": 1},
-        "stateAfter": {"step_count": 2},
-        "error": "ToolError: No flights available to destination 'Mars'. Service returned 404."
+        "startTime": "2024-01-15T11:15:00.650Z",
+        "endTime": "2024-01-15T11:15:01.250Z",
+        "latencyMs": 600,
+        "status": "success",
+        "input": { "repo": "org/repo", "pr": 142 },
+        "output": { "diff": "--- a/auth.py\n+++ b/auth.py\n@@ -12,6 +12,8 @@\n+  password = request.get('password')\n+  query = f\"SELECT * FROM users WHERE password='{password}'\"" },
+        "stateBefore": { "pr_diff": null },
+        "stateAfter": { "pr_diff": "--- a/auth.py..." }
       },
       {
-        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        "nodeId": "bbb-003",
-        "nodeName": "agent",
+        "conversationId": "conv-002",
+        "nodeId": "node-llm-1",
+        "nodeName": "CodeAnalyzer",
         "nodeType": "llm",
-        "startTime": "2025-07-25T09:55:05Z",
-        "endTime": "2025-07-25T09:55:08Z",
-        "latencyMs": 3000,
-        "status": "success",
-        "input": {"messages": [{"role": "tool", "content": "Error: No flights to Mars"}]},
-        "output": {"messages": [{"role": "assistant", "content": "I'll try an alternative approach."}]},
-        "stateBefore": {"step_count": 2},
-        "stateAfter": {"step_count": 3},
-        "error": null
+        "startTime": "2024-01-15T11:15:01.250Z",
+        "endTime": "2024-01-15T11:15:01.950Z",
+        "latencyMs": 700,
+        "status": "failed",
+        "input": {
+          "messages": [
+            { "role": "system", "content": "Analyze code for security vulnerabilities." },
+            { "role": "user", "content": "Review this diff: --- a/auth.py..." }
+          ],
+          "model": "gpt-4o"
+        },
+        "output": {},
+        "stateBefore": { "analysis": null },
+        "stateAfter": { "analysis": null },
+        "error": "RateLimitError: OpenAI API rate limit exceeded. Please retry after 60 seconds."
       },
       {
-        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        "nodeId": "bbb-004",
-        "nodeName": "memory",
-        "nodeType": "memory",
-        "startTime": "2025-07-25T09:55:08Z",
-        "endTime": "2025-07-25T09:55:09Z",
-        "latencyMs": 1000,
+        "conversationId": "conv-002",
+        "nodeId": "node-router-1",
+        "nodeName": "ErrorHandler",
+        "nodeType": "router",
+        "startTime": "2024-01-15T11:15:01.950Z",
+        "endTime": "2024-01-15T11:15:02.100Z",
+        "latencyMs": 150,
+        "status": "failed",
+        "input": { "error": "RateLimitError", "retry_count": 0 },
+        "output": { "next_node": "END", "reason": "max retries exceeded" },
+        "stateBefore": { "retry_count": 0 },
+        "stateAfter": { "retry_count": 1, "terminal": true },
+        "error": "Max retries exceeded for rate limit error."
+      }
+    ],
+    "conv-003": [
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-planner-1",
+        "nodeName": "Planner",
+        "nodeType": "planner",
+        "startTime": "2024-01-15T12:30:00.000Z",
+        "endTime": "2024-01-15T12:30:00.500Z",
+        "latencyMs": 500,
         "status": "success",
-        "input": {"action": "recall", "query": "space travel providers"},
-        "output": {"memories": ["SpaceX", "Blue Origin"]},
-        "stateBefore": {"step_count": 3},
-        "stateAfter": {"step_count": 4},
-        "error": null
+        "input": { "messages": [{ "role": "user", "content": "I was charged twice for my subscription." }] },
+        "output": { "intent": "billing_issue", "plan": ["lookup_account", "check_charges", "resolve"] },
+        "stateBefore": {},
+        "stateAfter": { "intent": "billing_issue" }
       },
       {
-        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        "nodeId": "bbb-005",
-        "nodeName": "booking_tool",
+        "conversationId": "conv-003",
+        "nodeId": "node-tool-1",
+        "nodeName": "AccountLookup",
         "nodeType": "tool",
-        "startTime": "2025-07-25T09:55:09Z",
-        "endTime": "2025-07-25T09:55:11Z",
-        "latencyMs": 2000,
-        "status": "failed",
-        "input": {"provider": "SpaceX", "destination": "Mars"},
-        "output": {},
-        "stateBefore": {"step_count": 4},
-        "stateAfter": {"step_count": 5},
-        "error": "TimeoutError: Provider API did not respond within 2000ms."
+        "startTime": "2024-01-15T12:30:00.500Z",
+        "endTime": "2024-01-15T12:30:01.000Z",
+        "latencyMs": 500,
+        "status": "success",
+        "input": { "user_id": "usr_8823" },
+        "output": { "account": { "id": "usr_8823", "plan": "Pro", "billing_cycle": "monthly" } },
+        "stateBefore": { "account": null },
+        "stateAfter": { "account": { "id": "usr_8823", "plan": "Pro" } }
       },
       {
-        "conversationId": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        "nodeId": "bbb-006",
-        "nodeName": "agent",
-        "nodeType": "llm",
-        "startTime": "2025-07-25T09:55:11Z",
-        "endTime": "2025-07-25T09:55:12Z",
-        "latencyMs": 1000,
+        "conversationId": "conv-003",
+        "nodeId": "node-tool-2",
+        "nodeName": "BillingCheck",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T12:30:01.000Z",
+        "endTime": "2024-01-15T12:30:01.700Z",
+        "latencyMs": 700,
         "status": "success",
-        "input": {"messages": [{"role": "tool", "content": "Timeout error"}]},
-        "output": {"messages": [{"role": "assistant", "content": "I'm sorry, I was unable to book a flight to Mars. All providers timed out or returned errors."}]},
-        "stateBefore": {"step_count": 5},
-        "stateAfter": {"step_count": 6},
-        "error": null
+        "input": { "account_id": "usr_8823", "days": 30 },
+        "output": {
+          "charges": [
+            { "date": "2024-01-14", "amount": 49.00, "description": "Pro Monthly" },
+            { "date": "2024-01-14", "amount": 49.00, "description": "Pro Monthly - Duplicate" }
+          ]
+        },
+        "stateBefore": { "charges": null },
+        "stateAfter": { "charges": [{}], "duplicate_detected": true }
+      },
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-llm-1",
+        "nodeName": "SupportAgent",
+        "nodeType": "llm",
+        "startTime": "2024-01-15T12:30:01.700Z",
+        "endTime": "2024-01-15T12:30:02.800Z",
+        "latencyMs": 1100,
+        "status": "success",
+        "input": {
+          "messages": [
+            { "role": "system", "content": "You are a helpful customer support agent. A duplicate charge was detected." },
+            { "role": "user", "content": "I was charged twice for my subscription." }
+          ],
+          "model": "gpt-4o"
+        },
+        "output": {
+          "content": "I can see that you were indeed charged twice on January 14th. I've initiated a refund of $49.00 which will appear in 3-5 business days. I apologize for the inconvenience.",
+          "actions": [{ "type": "refund", "amount": 49.00, "charge_id": "ch_duplicate" }]
+        },
+        "stateBefore": { "response": null },
+        "stateAfter": { "response": "I can see that you were indeed charged twice...", "refund_initiated": true }
+      },
+      {
+        "conversationId": "conv-003",
+        "nodeId": "node-tool-3",
+        "nodeName": "RefundProcessor",
+        "nodeType": "tool",
+        "startTime": "2024-01-15T12:30:02.800Z",
+        "endTime": "2024-01-15T12:30:03.100Z",
+        "latencyMs": 300,
+        "status": "success",
+        "input": { "charge_id": "ch_duplicate", "amount": 49.00 },
+        "output": { "refund_id": "re_abc123", "status": "pending", "estimated_days": 5 },
+        "stateBefore": { "refund": null },
+        "stateAfter": { "refund": { "id": "re_abc123", "status": "pending" } }
       }
     ]
   }

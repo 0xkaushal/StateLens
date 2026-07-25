@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #ededed;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* React Flow overrides */
+.react-flow__background {
+  background-color: #0a0a0f !important;
+}
