@@ -33,6 +33,9 @@ env/
 # StateLens local data
 .statelens/
 
+# Auth / credentials
+.npmrc
+
 # OS
 .DS_Store
 Thumbs.db
