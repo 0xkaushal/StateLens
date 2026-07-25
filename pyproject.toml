@@ -1,5 +1,5 @@
 [project]
-name = "statelens"
+name = "statelens-ai"
 version = "0.1.0"
 description = "Chrome DevTools for AI Agents — one install, full debugging experience"
 readme = "README.md"
@@ -48,6 +48,16 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sdk/src/statelens", "backend/src/statelens_server"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "frontend/node_modules",
+    "frontend/.next",
+    "sdk/.venv",
+    "backend/.venv",
+    ".venv",
+    "dist",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["sdk/tests", "backend/tests"]
