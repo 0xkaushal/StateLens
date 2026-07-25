@@ -16,21 +16,28 @@ class Conversation(BaseModel):
     """A logical grouping of Events from one agent execution."""
 
     id: str = Field(..., description="Conversation UUID.")
-    start_time: datetime = Field(
+    title: str = Field(..., description="Derived title (first user message or short ID).")
+    created_at: datetime = Field(
         ...,
-        alias="startTime",
+        alias="createdAt",
         description="Earliest event start time.",
     )
-    end_time: datetime = Field(
+    updated_at: datetime = Field(
         ...,
-        alias="endTime",
+        alias="updatedAt",
         description="Latest event end time.",
     )
-    node_count: int = Field(
+    total_events: int = Field(
         ...,
-        alias="nodeCount",
+        alias="totalEvents",
         ge=0,
         description="Total number of events.",
+    )
+    total_latency_ms: float = Field(
+        ...,
+        alias="totalLatencyMs",
+        ge=0,
+        description="Sum of all event latencies in milliseconds.",
     )
     status: EventStatus = Field(
         ...,

@@ -39,7 +39,7 @@ def test_db(tmp_path):
         INSERT INTO events VALUES (
             'node-001', 'conv-001', 'planner', 'planner',
             '2025-07-25T10:00:00Z', '2025-07-25T10:00:01Z', 1000,
-            'success', '{"q": "hello"}', '{"a": "plan"}', '{}', '{"step": 1}', NULL
+            'success', '{"messages": [{"role": "user", "content": "What is the weather?"}]}', '{"a": "plan"}', '{}', '{"step": 1}', NULL
         )
     """)
     conn.execute("""
@@ -102,10 +102,12 @@ class TestConversationsRoute:
         data = response.json()
         conv = data[0]  # conv-001
         assert conv["id"] == "conv-001"
-        assert conv["nodeCount"] == 2
+        assert conv["totalEvents"] == 2
+        assert conv["totalLatencyMs"] == 3000.0
         assert conv["status"] == "success"
-        assert "startTime" in conv
-        assert "endTime" in conv
+        assert "createdAt" in conv
+        assert "updatedAt" in conv
+        assert "title" in conv
 
     def test_failed_conversation_status(self, client):
         response = client.get("/conversations")
@@ -118,8 +120,9 @@ class TestConversationsRoute:
         assert response.status_code == 200
         data = response.json()
         assert data["id"] == "conv-001"
-        assert data["nodeCount"] == 2
+        assert data["totalEvents"] == 2
         assert len(data["events"]) == 2
+        assert "title" in data
 
     def test_get_conversation_not_found(self, client):
         response = client.get("/conversations/nonexistent")
@@ -150,7 +153,7 @@ class TestEventsRoute:
         assert event["nodeType"] == "planner"
         assert event["latencyMs"] == 1000
         assert event["status"] == "success"
-        assert event["input"] == {"q": "hello"}
+        assert event["input"] == {"messages": [{"role": "user", "content": "What is the weather?"}]}
         assert event["output"] == {"a": "plan"}
         assert event["error"] is None
 

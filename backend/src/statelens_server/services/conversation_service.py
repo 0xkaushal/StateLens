@@ -20,6 +20,30 @@ from statelens_server.schemas.responses import (
 )
 
 
+def _derive_title(first_input_json: str | None, conversation_id: str) -> str:
+    """Derive a conversation title from the first event's input.
+
+    Attempts to extract the first user message. Falls back to a short ID.
+    """
+    if first_input_json:
+        try:
+            data = json.loads(first_input_json)
+            # Try to find a user message in the input
+            messages = data.get("messages", [])
+            if isinstance(messages, list):
+                for msg in messages:
+                    if isinstance(msg, dict) and msg.get("role") == "user":
+                        content = msg.get("content", "")
+                        if content:
+                            # Truncate to 60 chars for readability
+                            return content[:60] + ("..." if len(content) > 60 else "")
+        except (json.JSONDecodeError, TypeError):
+            pass
+
+    # Fallback: short conversation ID
+    return f"Conversation {conversation_id[:8]}"
+
+
 def list_conversations() -> list[ConversationSummary]:
     """Get all conversations, most recent first."""
     with db.cursor() as cursor:
@@ -32,9 +56,11 @@ def list_conversations() -> list[ConversationSummary]:
     return [
         ConversationSummary(
             id=row["id"],
-            start_time=row["start_time"],
-            end_time=row["end_time"],
-            node_count=row["node_count"],
+            title=_derive_title(row["first_input"], row["id"]),
+            created_at=row["created_at"],
+            updated_at=row["updated_at"],
+            total_events=row["total_events"],
+            total_latency_ms=row["total_latency_ms"],
             status=row["status"],
         )
         for row in rows
@@ -61,9 +87,11 @@ def get_conversation(conversation_id: str) -> ConversationDetail | None:
 
     return ConversationDetail(
         id=conv_row["id"],
-        start_time=conv_row["start_time"],
-        end_time=conv_row["end_time"],
-        node_count=conv_row["node_count"],
+        title=_derive_title(conv_row["first_input"], conv_row["id"]),
+        created_at=conv_row["created_at"],
+        updated_at=conv_row["updated_at"],
+        total_events=conv_row["total_events"],
+        total_latency_ms=conv_row["total_latency_ms"],
         status=conv_row["status"],
         events=events,
     )

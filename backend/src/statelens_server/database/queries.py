@@ -7,14 +7,16 @@ All raw SQL lives here. No SQL anywhere else in the backend.
 LIST_CONVERSATIONS = """
     SELECT
         conversation_id AS id,
-        MIN(start_time) AS start_time,
-        MAX(end_time) AS end_time,
-        COUNT(*) AS node_count,
+        MIN(start_time) AS created_at,
+        MAX(end_time) AS updated_at,
+        COUNT(*) AS total_events,
+        CAST(SUM(latency_ms) AS REAL) AS total_latency_ms,
         CASE
             WHEN SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) > 0
             THEN 'failed'
             ELSE 'success'
-        END AS status
+        END AS status,
+        MIN(input) AS first_input
     FROM events
     GROUP BY conversation_id
     ORDER BY MAX(end_time) DESC
@@ -24,14 +26,16 @@ LIST_CONVERSATIONS = """
 GET_CONVERSATION = """
     SELECT
         conversation_id AS id,
-        MIN(start_time) AS start_time,
-        MAX(end_time) AS end_time,
-        COUNT(*) AS node_count,
+        MIN(start_time) AS created_at,
+        MAX(end_time) AS updated_at,
+        COUNT(*) AS total_events,
+        CAST(SUM(latency_ms) AS REAL) AS total_latency_ms,
         CASE
             WHEN SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) > 0
             THEN 'failed'
             ELSE 'success'
-        END AS status
+        END AS status,
+        MIN(input) AS first_input
     FROM events
     WHERE conversation_id = ?
     GROUP BY conversation_id

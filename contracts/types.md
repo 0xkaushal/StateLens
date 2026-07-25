@@ -56,9 +56,11 @@ A logical grouping of Events that belong to one agent execution.
 | Field            | Type       | Required | Description                              |
 |------------------|------------|----------|------------------------------------------|
 | id               | string     | ✅       | Same as conversationId in events          |
-| startTime        | ISO 8601   | ✅       | Earliest event startTime                  |
-| endTime          | ISO 8601   | ✅       | Latest event endTime                      |
-| nodeCount        | number     | ✅       | Total number of events                    |
+| title            | string     | ✅       | Derived from first user message (max 60 chars) |
+| createdAt        | ISO 8601   | ✅       | Earliest event startTime                  |
+| updatedAt        | ISO 8601   | ✅       | Latest event endTime                      |
+| totalEvents      | number     | ✅       | Total number of events                    |
+| totalLatencyMs   | number     | ✅       | Sum of all event latencies in ms          |
 | status           | EventStatus| ✅       | failed if any event failed, else success  |
 
 ---

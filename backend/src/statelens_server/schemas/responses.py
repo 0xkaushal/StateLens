@@ -17,10 +17,12 @@ class ConversationSummary(BaseModel):
     """Compact conversation representation for the list view."""
 
     id: str
-    start_time: str = Field(..., alias="startTime")
-    end_time: str = Field(..., alias="endTime")
-    node_count: int = Field(..., alias="nodeCount")
+    title: str
+    created_at: str = Field(..., alias="createdAt")
+    updated_at: str = Field(..., alias="updatedAt")
     status: str
+    total_events: int = Field(..., alias="totalEvents")
+    total_latency_ms: float = Field(..., alias="totalLatencyMs")
 
     model_config = {"populate_by_name": True}
 
@@ -49,10 +51,12 @@ class ConversationDetail(BaseModel):
     """Full conversation with events for the detail view."""
 
     id: str
-    start_time: str = Field(..., alias="startTime")
-    end_time: str = Field(..., alias="endTime")
-    node_count: int = Field(..., alias="nodeCount")
+    title: str
+    created_at: str = Field(..., alias="createdAt")
+    updated_at: str = Field(..., alias="updatedAt")
     status: str
+    total_events: int = Field(..., alias="totalEvents")
+    total_latency_ms: float = Field(..., alias="totalLatencyMs")
     events: list[EventResponse]
 
     model_config = {"populate_by_name": True}

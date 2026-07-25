@@ -31,10 +31,12 @@ List all recorded conversations, most recent first.
 [
   {
     "id": "uuid-string",
-    "startTime": "2025-07-25T10:00:00Z",
-    "endTime": "2025-07-25T10:00:05Z",
-    "nodeCount": 4,
-    "status": "success"
+    "title": "What is the weather in NYC?",
+    "createdAt": "2025-07-25T10:00:00Z",
+    "updatedAt": "2025-07-25T10:00:05Z",
+    "status": "success",
+    "totalEvents": 4,
+    "totalLatencyMs": 5000
   }
 ]
 ```
@@ -45,6 +47,8 @@ List all recorded conversations, most recent first.
 
 Get a single conversation with its events.
 
+Also available as `GET /conversation/{id}` (singular alias).
+
 **Path Parameters**
 - `id` — conversation UUID
 
@@ -52,10 +56,12 @@ Get a single conversation with its events.
 ```json
 {
   "id": "uuid-string",
-  "startTime": "2025-07-25T10:00:00Z",
-  "endTime": "2025-07-25T10:00:05Z",
-  "nodeCount": 4,
+  "title": "What is the weather in NYC?",
+  "createdAt": "2025-07-25T10:00:00Z",
+  "updatedAt": "2025-07-25T10:00:05Z",
   "status": "success",
+  "totalEvents": 4,
+  "totalLatencyMs": 5000,
   "events": [
     { "...Event object..." }
   ]

@@ -18,6 +18,7 @@ def get_conversations() -> list[ConversationSummary]:
 
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationDetail)
+@router.get("/conversation/{conversation_id}", response_model=ConversationDetail, include_in_schema=False)
 def get_conversation_detail(conversation_id: str) -> ConversationDetail:
     """Get a single conversation with all its events."""
     conversation = get_conversation(conversation_id)
