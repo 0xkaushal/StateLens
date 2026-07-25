@@ -1,8 +1,8 @@
 import type { Conversation, Event } from "@/types";
 import mockData from "@/mock/conversation.json";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
-const USE_MOCK = true; // flip to false when backend is ready
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
 async function fetchJSON<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`);
@@ -23,7 +23,7 @@ export async function getConversation(id: string): Promise<Conversation> {
     if (!conv) throw new Error(`Conversation ${id} not found`);
     return conv as Conversation;
   }
-  return fetchJSON<Conversation>(`/conversation/${id}`);
+  return fetchJSON<Conversation>(`/conversations/${id}`);
 }
 
 export async function getEvents(conversationId: string): Promise<Event[]> {
